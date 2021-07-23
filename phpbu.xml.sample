@@ -10,7 +10,7 @@
   <backups>
     <backup name="myAppDB">
       <!-- data to backup -->
-      <source type="mysql">
+      <source type="mysqldump">
         <option name="databases" value="dbname"/>
         <option name="tables" value=""/>
         <option name="ignoreTables" value=""/>

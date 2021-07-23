@@ -6,6 +6,8 @@ make autoconf alpine-sdk"
 ARG PACKAGES="bzip2 ca-certificates curl git icu-libs libbz2 libedit libgd libjpeg-turbo\
               libmcrypt libpng libpq libxml2 libxslt libzip\
               tzdata unzip wget xz zip" 
+# Clients for PHPBU
+ARG PKG_CLI="mongodb-tools mysqldump postgresql-client redis rsync"
 
 #####################################################################################
 #                                                                                   #
@@ -14,7 +16,7 @@ ARG PACKAGES="bzip2 ca-certificates curl git icu-libs libbz2 libedit libgd libjp
 #####################################################################################
 #hadolint ignore=DL3018
 RUN apk -U add --no-cache --virtual=build-deps ${DEV_PACKAGES} \
-    && apk add --no-cache ${PACKAGES} \
+    && apk add --no-cache ${PACKAGES} ${PKG_CLI} \
     && echo "#Installing php extensions" \
       && pecl install mcrypt \
          && docker-php-ext-enable mcrypt \

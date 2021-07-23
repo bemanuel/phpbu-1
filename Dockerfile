@@ -12,7 +12,7 @@ ARG PACKAGES="bzip2 ca-certificates curl git icu-libs libbz2 libedit libgd libjp
 #                                 Setup PHP & Extensions                            #
 #                                                                                   #
 #####################################################################################
-#hadolint ignore=DL3018 ignore=
+#hadolint ignore=DL3018
 RUN apk -U add --no-cache --virtual=build-deps ${DEV_PACKAGES} \
     && apk add --no-cache ${PACKAGES} \
     && echo "#Installing php extensions" \

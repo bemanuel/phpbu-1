@@ -1,6 +1,5 @@
 FROM php:7.3-alpine
 
-ARG PHPBU_VERSION=5.2.10
 ARG PACKAGES="freetype-dev libmcrypt-dev libpng-dev libjpeg-turbo-dev libxslt-dev bzip2-dev\
               icu-dev postgresql-dev libc-utils libzip-dev \
               make autoconf alpine-sdk"
@@ -11,7 +10,7 @@ ARG PACKAGES="freetype-dev libmcrypt-dev libpng-dev libjpeg-turbo-dev libxslt-de
 #                                                                                   #
 #####################################################################################
 RUN apk -U add --no-cache --virtual=build-deps ${PACKAGES} \
-    && apk add --no-cache ca-certificates curl libxml2 libedit libzip wget zip git \
+    && apk add --no-cache ca-certificates curl libbz2 libjpeg-turbo libgd libpng libxml2 libmcrypt libxslt libpq icu-libs libedit libzip wget zip git \
                          xz tzdata unzip bzip2 \ 
 
     && echo "#Installing php extensions" \
@@ -25,13 +24,21 @@ RUN apk -U add --no-cache --virtual=build-deps ${PACKAGES} \
       && echo "PHP Parameters" \
         && echo "memory_limit=-1" > $PHP_INI_DIR/conf.d/memory-limit.ini \
         && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > $PHP_INI_DIR/conf.d/date_timezone.ini \
-      && echo "#Setup PHPBU" \
-        && curl -L -o /usr/local/bin/phpbu.phar https://github.com/sebastianfeldmann/phpbu/releases/download/${PHPBU_VERSION}/phpbu-${PHPBU_VERSION}.phar \
-        && ln -s /usr/local/bin/phpbu.phar /usr/local/bin/phpbu \
-        && chmod +x /usr/local/bin/phpbu \
       && echo "Cleanup" \
         && apk del --purge build-deps \
         && rm -rf /tmp/*
+
+####################################################################################
+#                                                                                  #
+#                               Setup PHPBU                                        #
+#                                                                                  #
+####################################################################################
+
+ARG PHPBU_VERSION=6.0.15
+RUN echo "#Setup PHPBU" \
+        && curl -L -o /usr/local/bin/phpbu.phar https://github.com/sebastianfeldmann/phpbu/releases/download/${PHPBU_VERSION}/phpbu-${PHPBU_VERSION}.phar \
+        && ln -s /usr/local/bin/phpbu.phar /usr/local/bin/phpbu \
+        && chmod +x /usr/local/bin/phpbu 
 
 ####################################################################################
 #                                                                                  #

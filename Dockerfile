@@ -1,18 +1,20 @@
 FROM php:7.3-alpine
 
-ARG PACKAGES="freetype-dev libmcrypt-dev libpng-dev libjpeg-turbo-dev libxslt-dev bzip2-dev\
+ARG DEV_PACKAGES="freetype-dev libmcrypt-dev libpng-dev libjpeg-turbo-dev libxslt-dev bzip2-dev\
               icu-dev postgresql-dev libc-utils libzip-dev \
               make autoconf alpine-sdk"
+ARG PACKAGES="bzip2 ca-certificates curl git icu-libs libbz2 libedit libgd libjpeg-turbo\
+              libmcrypt libpng libpq libxml2 libxslt libzip\
+              tzdata unzip wget xz zip" 
 
 #####################################################################################
 #                                                                                   #
 #                                 Setup PHP & Extensions                            #
 #                                                                                   #
 #####################################################################################
-RUN apk -U add --no-cache --virtual=build-deps ${PACKAGES} \
-    && apk add --no-cache ca-certificates curl libbz2 libjpeg-turbo libgd libpng libxml2 libmcrypt libxslt libpq icu-libs libedit libzip wget zip git \
-                         xz tzdata unzip bzip2 \ 
-
+#hadolint ignore=DL3018
+RUN apk -U add --no-cache --virtual=build-deps "${DEV_PACKAGES}" \
+    && apk add --no-cache "${PACKAGES}" \
     && echo "#Installing php extensions" \
       && pecl install mcrypt \
          && docker-php-ext-enable mcrypt \
@@ -20,10 +22,10 @@ RUN apk -U add --no-cache --virtual=build-deps ${PACKAGES} \
          docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ && \
          docker-php-ext-install gd && \
          docker-php-ext-install opcache && \
-         docker-php-ext-install mbstring pdo pdo_mysql pdo_pgsql zip \
+         docker-php-ext-install mbstring pdo pdo_mysql pdo_pgsql zip \ 
       && echo "PHP Parameters" \
-        && echo "memory_limit=-1" > $PHP_INI_DIR/conf.d/memory-limit.ini \
-        && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > $PHP_INI_DIR/conf.d/date_timezone.ini \
+        && echo "memory_limit=-1" > "$PHP_INI_DIR"/conf.d/memory-limit.ini \
+        && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > "$PHP_INI_DIR"/conf.d/date_timezone.ini \
       && echo "Cleanup" \
         && apk del --purge build-deps \
         && rm -rf /tmp/*

@@ -7,7 +7,7 @@ ARG PACKAGES="bzip2 ca-certificates curl git icu-libs libbz2 libedit libgd libjp
               libmcrypt libpng libpq libxml2 libxslt libzip\
               tzdata unzip wget xz zip" 
 # Clients for PHPBU
-ARG PKG_CLI="mongodb-tools mysqldump postgresql-client redis rsync"
+ARG PKG_CLI="mongodb-tools mysql-client postgresql-client redis rsync"
 
 #####################################################################################
 #                                                                                   #

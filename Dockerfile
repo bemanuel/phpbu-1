@@ -1,8 +1,8 @@
 FROM php:7.3-alpine
 
-ARG DEV_PACKAGES="freetype-dev libmcrypt-dev libpng-dev libjpeg-turbo-dev libxslt-dev bzip2-dev\
-              icu-dev postgresql-dev libc-utils libzip-dev \
-              make autoconf alpine-sdk"
+ARG DEV_PACKAGES="freetype-dev libmcrypt-dev libpng-dev libjpeg-turbo-dev libxslt-dev bzip2-dev \
+icu-dev postgresql-dev libc-utils libzip-dev \
+make autoconf alpine-sdk"
 ARG PACKAGES="bzip2 ca-certificates curl git icu-libs libbz2 libedit libgd libjpeg-turbo\
               libmcrypt libpng libpq libxml2 libxslt libzip\
               tzdata unzip wget xz zip" 
@@ -12,9 +12,9 @@ ARG PACKAGES="bzip2 ca-certificates curl git icu-libs libbz2 libedit libgd libjp
 #                                 Setup PHP & Extensions                            #
 #                                                                                   #
 #####################################################################################
-#hadolint ignore=DL3018
-RUN apk -U add --no-cache --virtual=build-deps "${DEV_PACKAGES}" \
-    && apk add --no-cache "${PACKAGES}" \
+#hadolint ignore=DL3018 ignore=
+RUN apk -U add --no-cache --virtual=build-deps ${DEV_PACKAGES} \
+    && apk add --no-cache ${PACKAGES} \
     && echo "#Installing php extensions" \
       && pecl install mcrypt \
          && docker-php-ext-enable mcrypt \

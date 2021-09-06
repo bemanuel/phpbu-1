@@ -5,7 +5,7 @@ icu-dev postgresql-dev libc-utils libzip-dev \
 make autoconf alpine-sdk"
 ARG PACKAGES="bzip2 ca-certificates curl git icu-libs libbz2 libedit libgd libjpeg-turbo\
               libmcrypt libpng libpq libxml2 libxslt libzip\
-              tzdata unzip wget xz zip" 
+              python3 py3-pip tzdata unzip wget xz zip" 
 # Clients for PHPBU
 ARG PKG_CLI="mongodb-tools mysql-client postgresql-client redis rsync"
 
@@ -15,8 +15,12 @@ ARG PKG_CLI="mongodb-tools mysql-client postgresql-client redis rsync"
 #                                                                                   #
 #####################################################################################
 #hadolint ignore=DL3018
+COPY entrypoint.sh /entrypoint.sh
+
 RUN apk -U add --no-cache --virtual=build-deps ${DEV_PACKAGES} \
     && apk add --no-cache ${PACKAGES} ${PKG_CLI} \
+    && echo "TZ Tool" \
+    && pip3 install tzupdate \
     && echo "#Installing php extensions" \
       && pecl install mcrypt \
          && docker-php-ext-enable mcrypt \
@@ -30,8 +34,8 @@ RUN apk -U add --no-cache --virtual=build-deps ${DEV_PACKAGES} \
         && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > "$PHP_INI_DIR"/conf.d/date_timezone.ini \
       && echo "Cleanup" \
         && apk del --purge build-deps \
-        && rm -rf /tmp/*
-
+        && rm -rf /tmp/* \
+      && chmod +x /entrypoint.sh
 ####################################################################################
 #                                                                                  #
 #                               Setup PHPBU                                        #
@@ -53,5 +57,5 @@ RUN echo "#Setup PHPBU" \
 WORKDIR /workspace
 VOLUME ["/workspace","/backups","/etc/phpbu"]
 
-ENTRYPOINT ["/usr/local/bin/phpbu"]
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["--configuration=/etc/phpbu/script.xml"]

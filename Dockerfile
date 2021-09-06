@@ -14,13 +14,12 @@ ARG PKG_CLI="mongodb-tools mysql-client postgresql-client redis rsync"
 #                                 Setup PHP & Extensions                            #
 #                                                                                   #
 #####################################################################################
-#hadolint ignore=DL3018
-COPY entrypoint.sh /entrypoint.sh
 
+#hadolint ignore=DL3018,DL3013
 RUN apk -U add --no-cache --virtual=build-deps ${DEV_PACKAGES} \
     && apk add --no-cache ${PACKAGES} ${PKG_CLI} \
     && echo "TZ Tool" \
-    && pip3 install tzupdate \
+    && pip3 --no-cache-dir install tzupdate \
     && echo "#Installing php extensions" \
       && pecl install mcrypt \
          && docker-php-ext-enable mcrypt \
@@ -35,7 +34,6 @@ RUN apk -U add --no-cache --virtual=build-deps ${DEV_PACKAGES} \
       && echo "Cleanup" \
         && apk del --purge build-deps \
         && rm -rf /tmp/* \
-      && chmod +x /entrypoint.sh
 ####################################################################################
 #                                                                                  #
 #                               Setup PHPBU                                        #
@@ -48,6 +46,8 @@ RUN echo "#Setup PHPBU" \
         && ln -s /usr/local/bin/phpbu.phar /usr/local/bin/phpbu \
         && chmod +x /usr/local/bin/phpbu 
 
+COPY entrypoint.sh /entrypoint.sh
+RUN  chmod +x /entrypoint.sh
 ####################################################################################
 #                                                                                  #
 #                               Setup workspace dir                                #

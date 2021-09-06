@@ -41,6 +41,8 @@ RUN apk -U add --no-cache --virtual=build-deps ${DEV_PACKAGES} \
 ####################################################################################
 
 ARG PHPBU_VERSION=6.0.15
+
+#hadolint ignore=SC2086
 RUN echo "#Setup PHPBU" \
         && curl -L -o /usr/local/bin/phpbu.phar https://github.com/sebastianfeldmann/phpbu/releases/download/${PHPBU_VERSION}/phpbu-${PHPBU_VERSION}.phar \
         && ln -s /usr/local/bin/phpbu.phar /usr/local/bin/phpbu \

@@ -33,7 +33,7 @@ RUN apk -U add --no-cache --virtual=build-deps ${DEV_PACKAGES} \
         && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > "$PHP_INI_DIR"/conf.d/date_timezone.ini \
       && echo "Cleanup" \
         && apk del --purge build-deps \
-        && rm -rf /tmp/* \
+        && rm -rf /tmp/*
 ####################################################################################
 #                                                                                  #
 #                               Setup PHPBU                                        #
@@ -43,7 +43,7 @@ RUN apk -U add --no-cache --virtual=build-deps ${DEV_PACKAGES} \
 ARG PHPBU_VERSION=6.0.16
 
 #hadolint ignore=SC2086
-RUN echo "#Setup PHPBU" \
+RUN echo "#Setup PHPBU ${PHPBU_VERSION}" \
         && curl -L -o /usr/local/bin/phpbu.phar https://phar.phpbu.de/phpbu-${PHPBU_VERSION}.phar \
         && ln -s /usr/local/bin/phpbu.phar /usr/local/bin/phpbu \
         && chmod +x /usr/local/bin/phpbu 

@@ -44,7 +44,7 @@ ARG PHPBU_VERSION=6.0.16
 
 #hadolint ignore=SC2086
 RUN echo "#Setup PHPBU" \
-        && curl -L -o /usr/local/bin/phpbu.phar https://github.com/sebastianfeldmann/phpbu/releases/download/${PHPBU_VERSION}/phpbu-${PHPBU_VERSION}.phar \
+        && curl -L -o /usr/local/bin/phpbu.phar https://phar.phpbu.de/phpbu-${PHPBU_VERSION}.phar \
         && ln -s /usr/local/bin/phpbu.phar /usr/local/bin/phpbu \
         && chmod +x /usr/local/bin/phpbu 
 

@@ -40,7 +40,7 @@ RUN apk -U add --no-cache --virtual=build-deps ${DEV_PACKAGES} \
 #                                                                                  #
 ####################################################################################
 
-ARG PHPBU_VERSION=6.0.15
+ARG PHPBU_VERSION=6.0.16
 
 #hadolint ignore=SC2086
 RUN echo "#Setup PHPBU" \
